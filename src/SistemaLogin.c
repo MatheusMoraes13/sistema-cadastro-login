@@ -90,7 +90,7 @@ int main (int argc, char *argv[])
 
     gtk_init ( &argc, &argv);
 
-    builder = gtk_builder_new_from_file ("ui.glade");
+    builder = gtk_builder_new_from_file ("UI.glade");
 
     gtk_builder_add_callback_symbols(
         builder,
