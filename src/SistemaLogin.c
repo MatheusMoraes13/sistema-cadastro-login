@@ -23,23 +23,40 @@ void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
     gtk_main_quit();
 }
 
+
+void mensagem (char text [100], char secundary_text [100], char icon_name [100])
+{
+
+    GtkMessageDialog *mensagem_dialogo = gtk_builder_get_object (builder, "mensagem");
+
+    g_object_set (mensagem_dialogo, "text", text, NULL);
+    g_object_set (mensagem_dialogo, "secundary_text", secundary_text, NULL);
+    g_object_set (mensagem_dialogo, "icon_name", icon_name, NULL);
+
+    gtk_widget_show_all (mensagem_dialogo);
+    gtk_dialog_run      (mensagem_dialogo);
+    gtk_widget_hide     (mensagem_dialogo);
+
+}
+
 void Login (char *email, char *senha, bool lembrar)
 {
 
     if ((strcmp (email, "admin") == 0) && (strcmp (senha, "admin") == 0))
     {
 
-        g_print ("Usuario logado com sucesso");
+        mensagem ("Bem Vindo", "Usuario logado com sucesso!", "dialog-ok");
 
     }
 
     else
     {
 
-        g_print ("Email ou senha incorretos");
+        mensagem ("Aviso", "Email ou senhas incorretos! \n tente novamente", "dialog-error");
 
     }
 }
+
 
 void on_button_login_clicked (GtkWidget *widget, gpointer data)
 {
@@ -53,11 +70,6 @@ void on_button_login_clicked (GtkWidget *widget, gpointer data)
 
     Login (email, senha, lembrar);
 
-    if (lembrar == 1){
-
-        g_print ("\n Lembrando");
-
-    }
 }
 
 
