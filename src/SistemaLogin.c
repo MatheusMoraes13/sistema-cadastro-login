@@ -8,6 +8,18 @@ GtkBuilder *builder;
 GtkWidget *window;
 GtkStack *stack;
 
+typedef struct usuario
+{
+    int id;
+    char nome [100];
+    char email [100];
+    struct usuario *proximo;
+} user;
+
+int id = 0;
+user *cabecalho_user;
+user *proximo_user;
+
 void on_main_window_destroy (GtkWidget *widget, gpointer data)
 {
     gtk_main_quit();
@@ -91,7 +103,27 @@ void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    char *cad_nome = gtk_entry_get_text (gtk_builder_get_object (builder, "senha"))
+    char *cad_nome = gtk_entry_get_text (gtk_builder_get_object (builder, "cad_nome"));
+    char *cad_email = gtk_entry_get_text (gtk_builder_get_object (builder, "cad_email"));
+
+    if (strcmp (cad_nome, "") == 0)
+    {
+
+        mensagem ("Aviso", "Campo \"Nome\" obrigatorio!", "dialog-error");
+
+    }
+    else
+    {
+        id++;
+        proximo_user -> id = id;
+        strcpy(proximo_user -> nome, cad_nome);
+        strcpy(proximo_user -> email, cad_email);
+
+    }
+
+    g_print ("\n%s", cad_nome);
+    g_print ("\n%s", cad_email);
+
 
 }
 
@@ -120,6 +152,8 @@ void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
 
 int main (int argc, char *argv[])
 {
+    cabecalho_user = (user *)malloc (sizeof (user));
+    proximo_user = cabecalho_user;
 
     gtk_init ( &argc, &argv);
 
