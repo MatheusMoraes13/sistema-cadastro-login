@@ -6,6 +6,7 @@
 
 GtkBuilder *builder;
 GtkWidget *window;
+GtkStack *stack;
 
 void on_main_window_destroy (GtkWidget *widget, gpointer data)
 {
@@ -14,13 +15,17 @@ void on_main_window_destroy (GtkWidget *widget, gpointer data)
 
 void on_button_cadastrar_inicial_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_cadastro");
+
 }
 
 
 void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_listar");
+
 }
 
 
@@ -46,6 +51,7 @@ void Login (char *email, char *senha, bool lembrar)
     {
 
         mensagem ("Bem Vindo", "Usuario logado com sucesso!", "dialog-ok");
+        gtk_stack_set_visible_child_name (stack, "view_inicial");
 
     }
 
@@ -75,27 +81,41 @@ void on_button_login_clicked (GtkWidget *widget, gpointer data)
 
 void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_login");
+
 }
 
 
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_cadastro");
+
 }
 
 
 void on_button_cad_voltar_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_inicial");
+
 }
 
 
 void on_button_listar_clicked (GtkWidget *widget, gpointer data)
 {
-    gtk_main_quit();
+
+    gtk_stack_set_visible_child_name (stack, "view_listar");
+
 }
 
+void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack, "view_inicial");
+
+}
 
 int main (int argc, char *argv[])
 {
@@ -106,18 +126,20 @@ int main (int argc, char *argv[])
 
     gtk_builder_add_callback_symbols(
         builder,
-        "on_button_login_clicked",                  G_CALLBACK(on_button_login_clicked),
-        "on_main_window_destroy",                   G_CALLBACK(on_main_window_destroy),
-        "on_button_cadastrar_inicial_clicked",      G_CALLBACK(on_button_cadastrar_inicial_clicked),
-        "on_button_listar_inicial_clicked",         G_CALLBACK(on_button_listar_inicial_clicked),
-        "on_button_sair_inicial_clicked",           G_CALLBACK(on_button_sair_inicial_clicked),
-        "on_button_cadastrar_clicked",              G_CALLBACK(on_button_cadastrar_clicked),
-        "on_button_cad_voltar_clicked",             G_CALLBACK(on_button_cad_voltar_clicked),
-        "on_button_listar_clicked",                 G_CALLBACK(on_button_listar_clicked),
+        "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
+        "on_main_window_destroy",                   G_CALLBACK (on_main_window_destroy),
+        "on_button_cadastrar_inicial_clicked",      G_CALLBACK (on_button_cadastrar_inicial_clicked),
+        "on_button_listar_inicial_clicked",         G_CALLBACK (on_button_listar_inicial_clicked),
+        "on_button_sair_inicial_clicked",           G_CALLBACK (on_button_sair_inicial_clicked),
+        "on_button_cadastrar_clicked",              G_CALLBACK (on_button_cadastrar_clicked),
+        "on_button_cad_voltar_clicked",             G_CALLBACK (on_button_cad_voltar_clicked),
+        "on_button_listar_clicked",                 G_CALLBACK (on_button_listar_clicked),
+        "on_button_listar_voltar_clicked",           G_CALLBACK (on_button_listar_voltar_clicked),
         NULL);
 
     gtk_builder_connect_signals (builder, NULL);
 
+    stack = GTK_STACK(gtk_builder_get_object(builder, "stack"));
     window = GTK_WIDGET (gtk_builder_get_object (builder, "main_window"));
 
     gtk_widget_show_all (window);
