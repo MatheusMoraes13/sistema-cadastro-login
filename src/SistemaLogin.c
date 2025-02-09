@@ -52,6 +52,7 @@ void Login (char *email, char *senha, bool lembrar)
 
         mensagem ("Bem Vindo", "Usuario logado com sucesso!", "dialog-ok");
         gtk_stack_set_visible_child_name (stack, "view_inicial");
+        g_object_set (window, "icon_name", "avatar-default", NULL);
 
     }
 
@@ -90,7 +91,7 @@ void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    gtk_stack_set_visible_child_name (stack, "view_cadastro");
+    char *cad_nome = gtk_entry_get_text (gtk_builder_get_object (builder, "senha"))
 
 }
 
