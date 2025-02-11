@@ -50,9 +50,9 @@ void mensagem (char text [100], char secundary_text [100], char icon_name [100])
     g_object_set (mensagem_dialogo, "secundary_text", secundary_text, NULL);
     g_object_set (mensagem_dialogo, "icon_name", icon_name, NULL);
 
-    gtk_widget_show_all (mensagem_dialogo);
-    gtk_dialog_run      (mensagem_dialogo);
-    gtk_widget_hide     (mensagem_dialogo);
+    gtk_widget_show_all (GTK_ENTRY (mensagem_dialogo));
+    gtk_dialog_run      (GTK_DIALOG (mensagem_dialogo));
+    gtk_widget_hide     (GTK_ENTRY (mensagem_dialogo));
 
 }
 
@@ -103,8 +103,11 @@ void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    char *cad_nome = gtk_entry_get_text (gtk_builder_get_object (builder, "cad_nome"));
-    char *cad_email = gtk_entry_get_text (gtk_builder_get_object (builder, "cad_email"));
+    GtkEntry *entry_nome = GTK_ENTRY (gtk_builder_get_object(builder, "cad_nome"));
+    GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "cad_email"));
+
+    char *cad_nome = gtk_entry_get_text (entry_nome);
+    char *cad_email = gtk_entry_get_text (entry_email);
 
     if (strcmp (cad_nome, "") == 0)
     {
