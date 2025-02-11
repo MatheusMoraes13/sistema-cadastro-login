@@ -44,15 +44,15 @@ void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
 void mensagem (char text [100], char secundary_text [100], char icon_name [100])
 {
 
-    GtkMessageDialog *mensagem_dialogo = gtk_builder_get_object (builder, "mensagem");
+    GtkMessageDialog *mensagem_dialogo = GTK_MESSAGE_DIALOG( gtk_builder_get_object (builder, "mensagem"));
 
     g_object_set (mensagem_dialogo, "text", text, NULL);
     g_object_set (mensagem_dialogo, "secundary_text", secundary_text, NULL);
     g_object_set (mensagem_dialogo, "icon_name", icon_name, NULL);
 
-    gtk_widget_show_all (GTK_ENTRY (mensagem_dialogo));
+    gtk_widget_show_all (GTK_WIDGET (mensagem_dialogo));
     gtk_dialog_run      (GTK_DIALOG (mensagem_dialogo));
-    gtk_widget_hide     (GTK_ENTRY (mensagem_dialogo));
+    gtk_widget_hide     (GTK_WIDGET (mensagem_dialogo));
 
 }
 
