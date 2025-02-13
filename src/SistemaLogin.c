@@ -7,6 +7,7 @@
 GtkBuilder *builder;
 GtkWidget *window;
 GtkStack *stack;
+GtkListStore *modelo_armazenamento;
 
 typedef struct usuario
 {
@@ -122,11 +123,19 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
         strcpy(proximo_user -> nome, cad_nome);
         strcpy(proximo_user -> email, cad_email);
 
+        g_print ("\n\nID: %d\nNome: %s\nEmail: %s\n",
+                 proximo_user->id,
+                 proximo_user->nome,
+                 proximo_user->email);
+
+        char texto[100];
+        g_snprintf(texto, 100, "%s%s%s", "Usuario", proximo_user->nome, "cadastrado!");
+        mensagem ("Aviso", texto, "dialog_mensage_default");
+
+        proximo_user -> proximo = (user *) malloc (sizeof (user));
+        proximo_user = proximo_user -> proximo;
+
     }
-
-    g_print ("\n%s", cad_nome);
-    g_print ("\n%s", cad_email);
-
 
 }
 
@@ -142,8 +151,25 @@ void on_button_cad_voltar_clicked (GtkWidget *widget, gpointer data)
 void on_button_listar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    gtk_stack_set_visible_child_name (stack, "view_listar");
+    proximo_user->proximo = NULL;
+    proximo_user = cabecalho_user;
 
+    GtkTreeIter iter;
+    gtk_list_store_clear (modelo_armazenamento);
+
+    while(proximo_user->proximo != NULL)
+    {
+
+        gtk_list_store_append(modelo_armazenamento, &iter);
+        gtk_list_store_set(modelo_armazenamento, &iter ,
+                           0, proximo_user->id,
+                           1, proximo_user->nome,
+                           2, proximo_user->email,
+                           -1);
+
+
+        proximo_user = proximo_user->proximo;
+    }
 }
 
 void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
@@ -179,6 +205,7 @@ int main (int argc, char *argv[])
 
     stack = GTK_STACK(gtk_builder_get_object(builder, "stack"));
     window = GTK_WIDGET (gtk_builder_get_object (builder, "main_window"));
+    modelo_armazenamento = GTK_LIST_STORE (gtk_builder_get_object (builder, "liststore1"));
 
     gtk_widget_show_all (window);
     gtk_main ();
