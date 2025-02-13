@@ -14,6 +14,7 @@ typedef struct usuario
     int id;
     char nome [100];
     char email [100];
+    char senha [100];
     struct usuario *proximo;
 } user;
 
@@ -106,9 +107,11 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
     GtkEntry *entry_nome = GTK_ENTRY (gtk_builder_get_object(builder, "cad_nome"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "cad_email"));
+    GtkEntry *entry_senha = GTK_ENTRY (gtk_builder_get_object(builder, "cad_senha"));
 
     char *cad_nome = gtk_entry_get_text (entry_nome);
     char *cad_email = gtk_entry_get_text (entry_email);
+    char *cad_senha = gtk_entry_get_text (entry_senha);
 
     if (strcmp (cad_nome, "") == 0)
     {
@@ -116,17 +119,34 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
         mensagem ("Aviso", "Campo \"Nome\" obrigatorio!", "dialog-error");
 
     }
+
+    if (strcmp (cad_email, "") == 0)
+    {
+
+        mensagem ("Aviso", "Campo \"Email\" obrigatorio!", "dialog-error");
+
+    }
+
+    if (strcmp (cad_senha, "") == 0)
+    {
+
+        mensagem ("Aviso", "Campo \"Senha\" obrigatorio!", "dialog-error");
+
+    }
+
     else
     {
         id++;
         proximo_user -> id = id;
         strcpy(proximo_user -> nome, cad_nome);
         strcpy(proximo_user -> email, cad_email);
+        strcpy(proximo_user -> senha, cad_senha);
 
-        g_print ("\n\nID: %d\nNome: %s\nEmail: %s\n",
+        g_print ("\n\nID: %d\nNome: %s\nEmail: %s\nSenha: %s\n/",
                  proximo_user->id,
                  proximo_user->nome,
-                 proximo_user->email);
+                 proximo_user->email,
+                 proximo_user->senha);
 
         char texto[100];
         g_snprintf(texto, 100, "%s%s%s", "Usuario", proximo_user->nome, "cadastrado!");
@@ -165,6 +185,7 @@ void on_button_listar_clicked (GtkWidget *widget, gpointer data)
                            0, proximo_user->id,
                            1, proximo_user->nome,
                            2, proximo_user->email,
+                           3, proximo_user->senha,
                            -1);
 
 
