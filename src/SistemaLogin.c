@@ -10,18 +10,7 @@ GtkWidget *window;
 GtkStack *stack;
 GtkListStore *modelo_armazenamento;
 
-typedef struct usuario
-{
-    int id;
-    char nome [100];
-    char email [100];
-    char senha [100];
-    struct usuario *proximo;
-} user;
-
 int id = 0;
-user *cabecalho_user;
-user *proximo_user;
 
 void on_main_window_destroy (GtkWidget *widget, gpointer data)
 {
@@ -113,10 +102,35 @@ int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
     return 0;
 }
 
+int obter_proximo_id(sqlite3 *db)
+{
+    sqlite3_stmt *stmt;
+    int proximo_id = 1;
+
+    const char *query = "SELECT MAX(id) FROM logins;";
+    
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) == SQLITE_OK)
+    {
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            int max_id = sqlite3_column_int(stmt, 0);
+            if (max_id > 0)
+            {
+                proximo_id = max_id + 1;
+            }
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    return proximo_id;
+}
+
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
     sqlite3 * db = 0;
+    sqlite3_stmt *stmt;
     int rc = sqlite3_open("Logins.db3", &db);
+    
 
     GtkEntry *entry_nome = GTK_ENTRY (gtk_builder_get_object(builder, "cad_nome"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "cad_email"));
@@ -149,24 +163,12 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
     else
     {
-        if (proximo_user == NULL) {
-            proximo_user = (user *)malloc(sizeof(user));
-            if (proximo_user == NULL) {
-                mensagem("Erro", "Falha ao alocar memória!", "dialog-error");
-                return;
-            }
-        }
-
-        id++;
-        proximo_user -> id = id;
-        strcpy(proximo_user -> nome, cad_nome);
-        strcpy(proximo_user -> email, cad_email);
-        strcpy(proximo_user -> senha, cad_senha);
+        int id = obter_proximo_id(db);
 
         char insert[256];
 
-        sprintf(insert, "INSERT INTO logins (id, nome, email, senha) VALUES (%d, '%s', '%s', '%s');",
-        id, cad_nome, cad_email, cad_senha);
+        sprintf(insert, "INSERT INTO logins (nome, email, senha) VALUES ('%s', '%s', '%s');",
+        cad_nome, cad_email, cad_senha);
 
         char *mensagem_erro = NULL;
         rc = sqlite3_exec(db, insert, sqlite_retorno, 0, &mensagem_erro);
@@ -179,17 +181,8 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
 
         char texto[100];
-        g_snprintf(texto, 100, "%s%s%s", "Usuario", proximo_user->nome, "cadastrado!");
+        g_snprintf(texto, 100, "%s%s%s", "Usuario ", cad_nome, " cadastrado!");
         mensagem ("Aviso", texto, "dialog_mensage_default");
-        
-        proximo_user->proximo = (user *) malloc(sizeof(user));
-        if (proximo_user->proximo == NULL) {
-        mensagem("Erro", "Falha ao alocar memória para o próximo usuário!", "dialog-error");
-        return;
-        }
-
-        proximo_user -> proximo = (user *) malloc (sizeof (user));
-        proximo_user = proximo_user -> proximo;
 
     }
 
@@ -276,9 +269,6 @@ int main (int argc, char *argv[])
 
     rc = sqlite3_exec(db, create, sqlite_retorno, 0, &mensagem_erro);
 
-
-    cabecalho_user = (user *)malloc (sizeof (user));
-    proximo_user = cabecalho_user;
 
     gtk_init ( &argc, &argv);
 
