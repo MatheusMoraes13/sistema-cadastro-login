@@ -39,10 +39,16 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Linker>
+			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite3.lib" />
+		</Linker>
 		<Unit filename="SistemaLogin.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="UI.glade" />
+		<Unit filename="sqlite_03/sqlite3.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

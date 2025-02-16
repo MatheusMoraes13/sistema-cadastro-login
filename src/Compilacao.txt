@@ -1,0 +1,3 @@
+cd /c/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src
+
+gcc SistemaLogin.c -o SistemaLogin.exe $(/mingw64/bin/pkg-config --cflags --libs gtk+-3.0) -lsqlite3

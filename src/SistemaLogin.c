@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
+#include <sqlite3.h>
 
 
 GtkBuilder *builder;
@@ -43,13 +44,13 @@ void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
 }
 
 
-void mensagem (char text [100], char secundary_text [100], char icon_name [100])
+void mensagem (const char text [100], const char secondary_text [100], char icon_name [100])
 {
 
     GtkMessageDialog *mensagem_dialogo = GTK_MESSAGE_DIALOG( gtk_builder_get_object (builder, "mensagem"));
 
     g_object_set (mensagem_dialogo, "text", text, NULL);
-    g_object_set (mensagem_dialogo, "secundary_text", secundary_text, NULL);
+    g_object_set (mensagem_dialogo, "secondary_text", secondary_text, NULL);
     g_object_set (mensagem_dialogo, "icon_name", icon_name, NULL);
 
     gtk_widget_show_all (GTK_WIDGET (mensagem_dialogo));
@@ -58,7 +59,7 @@ void mensagem (char text [100], char secundary_text [100], char icon_name [100])
 
 }
 
-void Login (char *email, char *senha, bool lembrar)
+void Login (const char *email, const char *senha, bool lembrar)
 {
 
     if ((strcmp (email, "admin") == 0) && (strcmp (senha, "admin") == 0))
@@ -101,17 +102,29 @@ void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 
 }
 
+int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
+    for (int i = 0; i < argc; i++){
+
+        printf("%s = %s\n", coluna [i], argv[i] ? argv[i]: "NULL");
+
+    }
+
+    printf("\n");
+    return 0;
+}
 
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
+    sqlite3 * db = 0;
+    int rc = sqlite3_open("Logins.db3", &db);
 
     GtkEntry *entry_nome = GTK_ENTRY (gtk_builder_get_object(builder, "cad_nome"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "cad_email"));
     GtkEntry *entry_senha = GTK_ENTRY (gtk_builder_get_object(builder, "cad_senha"));
 
-    char *cad_nome = gtk_entry_get_text (entry_nome);
-    char *cad_email = gtk_entry_get_text (entry_email);
-    char *cad_senha = gtk_entry_get_text (entry_senha);
+    const char *cad_nome = gtk_entry_get_text (entry_nome);
+    const char *cad_email = gtk_entry_get_text (entry_email);
+    const char *cad_senha = gtk_entry_get_text (entry_senha);
 
     if (strcmp (cad_nome, "") == 0)
     {
@@ -136,21 +149,44 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
     else
     {
+        if (proximo_user == NULL) {
+            proximo_user = (user *)malloc(sizeof(user));
+            if (proximo_user == NULL) {
+                mensagem("Erro", "Falha ao alocar memória!", "dialog-error");
+                return;
+            }
+        }
+
         id++;
         proximo_user -> id = id;
         strcpy(proximo_user -> nome, cad_nome);
         strcpy(proximo_user -> email, cad_email);
         strcpy(proximo_user -> senha, cad_senha);
 
-        g_print ("\n\nID: %d\nNome: %s\nEmail: %s\nSenha: %s\n/",
-                 proximo_user->id,
-                 proximo_user->nome,
-                 proximo_user->email,
-                 proximo_user->senha);
+        char insert[256];
+
+        sprintf(insert, "INSERT INTO logins (id, nome, email, senha) VALUES (%d, '%s', '%s', '%s');",
+        id, cad_nome, cad_email, cad_senha);
+
+        char *mensagem_erro = NULL;
+        rc = sqlite3_exec(db, insert, sqlite_retorno, 0, &mensagem_erro);
+
+        if (rc != SQLITE_OK) {
+        mensagem("Erro", mensagem_erro, "dialog-error");
+        sqlite3_free(mensagem_erro);
+        return;
+        }
+
 
         char texto[100];
         g_snprintf(texto, 100, "%s%s%s", "Usuario", proximo_user->nome, "cadastrado!");
         mensagem ("Aviso", texto, "dialog_mensage_default");
+        
+        proximo_user->proximo = (user *) malloc(sizeof(user));
+        if (proximo_user->proximo == NULL) {
+        mensagem("Erro", "Falha ao alocar memória para o próximo usuário!", "dialog-error");
+        return;
+        }
 
         proximo_user -> proximo = (user *) malloc (sizeof (user));
         proximo_user = proximo_user -> proximo;
@@ -170,26 +206,43 @@ void on_button_cad_voltar_clicked (GtkWidget *widget, gpointer data)
 
 void on_button_listar_clicked (GtkWidget *widget, gpointer data)
 {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_open("Logins.db3", &db);
 
-    proximo_user->proximo = NULL;
-    proximo_user = cabecalho_user;
+    if (rc != SQLITE_OK)
+    {
+        mensagem("Erro", "Não foi possível conectar ao banco de dados!", "dialog-error");
+        return;
+    }
+
+    const char *query = "SELECT id, nome, email, senha FROM logins;";
+    rc = sqlite3_prepare_v2(db, query, -1, &stmt, NULL);
+
+    if (rc != SQLITE_OK)
+    {
+        mensagem("Erro", "Falha ao preparar a consulta!", "dialog-error");
+        sqlite3_close(db);
+        return;
+    }
+
 
     GtkTreeIter iter;
     gtk_list_store_clear (modelo_armazenamento);
 
-    while(proximo_user->proximo != NULL)
+    while(sqlite3_step(stmt) == SQLITE_ROW)
     {
-
+        int id = sqlite3_column_int(stmt, 0);
+        const char *nome = (const char *)sqlite3_column_text(stmt, 1);
+        const char*email = (const char *)sqlite3_column_text(stmt, 2);
+        const char*senha = (const char *)sqlite3_column_text(stmt, 3);
         gtk_list_store_append(modelo_armazenamento, &iter);
         gtk_list_store_set(modelo_armazenamento, &iter ,
-                           0, proximo_user->id,
-                           1, proximo_user->nome,
-                           2, proximo_user->email,
-                           3, proximo_user->senha,
+                           0, id,
+                           1, nome,
+                           2, email,
+                           3, senha,
                            -1);
-
-
-        proximo_user = proximo_user->proximo;
     }
 }
 
@@ -200,8 +253,30 @@ void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
 
 }
 
+
 int main (int argc, char *argv[])
 {
+    //Criando e abrindo o banco de dados
+    char *mensagem_erro = NULL;
+    sqlite3 * db = 0;
+
+    int rc = sqlite3_open("Logins.db3", &db);
+
+    if (rc != SQLITE_OK){
+        mensagem("Erro", "Falha ao abrir o banco de dados!", "dialog-error");
+        sqlite3_close(db);
+        return 1;
+    }
+
+    char create[] = "CREATE TABLE logins( "
+                    "id INTEGER PRIMARY KEY, "
+                    "nome TEXT,"
+                    "email TEXT,"
+                    "senha TEXT)";
+
+    rc = sqlite3_exec(db, create, sqlite_retorno, 0, &mensagem_erro);
+
+
     cabecalho_user = (user *)malloc (sizeof (user));
     proximo_user = cabecalho_user;
 
@@ -230,5 +305,6 @@ int main (int argc, char *argv[])
 
     gtk_widget_show_all (window);
     gtk_main ();
+    sqlite3_close(db);
     return 0;
 }
