@@ -33,7 +33,7 @@ void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
 }
 
 
-void mensagem (const char text [100], const char secondary_text [100], char icon_name [100])
+void mensagem (const char *text, const char *secondary_text, char *icon_name)
 {
 
     GtkMessageDialog *mensagem_dialogo = GTK_MESSAGE_DIALOG( gtk_builder_get_object (builder, "mensagem"));
@@ -108,7 +108,7 @@ int obter_proximo_id(sqlite3 *db)
     int proximo_id = 1;
 
     const char *query = "SELECT MAX(id) FROM logins;";
-    
+
     if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) == SQLITE_OK)
     {
         if (sqlite3_step(stmt) == SQLITE_ROW)
@@ -130,7 +130,7 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
     sqlite3 * db = 0;
     sqlite3_stmt *stmt;
     int rc = sqlite3_open("Logins.db3", &db);
-    
+
 
     GtkEntry *entry_nome = GTK_ENTRY (gtk_builder_get_object(builder, "cad_nome"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "cad_email"));
@@ -180,8 +180,8 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
         }
 
 
-        char texto[100];
-        g_snprintf(texto, 100, "%s%s%s", "Usuario ", cad_nome, " cadastrado!");
+        char texto[128];
+        g_snprintf(texto, 128, "%s%s%s", "Usuario ", cad_nome, " cadastrado!");
         mensagem ("Aviso", texto, "dialog_mensage_default");
 
     }

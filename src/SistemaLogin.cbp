@@ -16,11 +16,14 @@
 					<Add directory="/usr/include/gtk-3.0" />
 					<Add directory="/usr/include/cairo" />
 					<Add directory="/usr/include/pango-1.0" />
+					<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll" />
+					<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03" />
 				</Compiler>
 				<Linker>
 					<Add library="gtk-3" />
 					<Add library="cairo" />
 					<Add library="pango-1.0" />
+					<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03/sqlite3.lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -40,7 +43,9 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
+			<Add option="C:\Users\mathe\Desktop\Repositórios\SistemaCadastroLogin\src\dll" />
 			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite3.lib" />
+			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll" />
 		</Linker>
 		<Unit filename="SistemaLogin.c">
 			<Option compilerVar="CC" />
