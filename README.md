@@ -7,6 +7,7 @@ Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a b
 - **C**: Linguagem de programação principal.
 - **GTK3**: Biblioteca para interface gráfica.
 - **Glade**: Ferramenta para construção da UI.
+- **SQLlite3**: Ferramenta de banco de dados utilizada para armazenamento das informações dos logins.
 
 ## Funcionalidades
 - Cadastro de novos usuários.
