@@ -3267,7 +3267,7 @@
 	<crtdefs.h>
 	<stdio.h>
 
-1739685185 source:c:\users\mathe\desktop\repositórios\sistemacadastrologin\src\sistemalogin.c
+1740002266 source:c:\users\mathe\desktop\repositórios\sistemacadastrologin\src\sistemalogin.c
 	<gtk/gtk.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -4249,5 +4249,8 @@
 	<crtdefs.h>
 
 1739500150 c:\users\mathe\desktop\repositórios\sistemacadastrologin\src\sqlite_03\sqlite3.h
+	<stdarg.h>
+
+1733721743 c:\msys64\ucrt64\include\sqlite3.h
 	<stdarg.h>
 

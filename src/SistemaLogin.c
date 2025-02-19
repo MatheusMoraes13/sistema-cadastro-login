@@ -17,22 +17,6 @@ void on_main_window_destroy (GtkWidget *widget, gpointer data)
     gtk_main_quit();
 }
 
-void on_button_cadastrar_inicial_clicked (GtkWidget *widget, gpointer data)
-{
-
-    gtk_stack_set_visible_child_name (stack, "view_cadastro");
-
-}
-
-
-void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
-{
-
-    gtk_stack_set_visible_child_name (stack, "view_listar");
-
-}
-
-
 void mensagem (const char *text, const char *secondary_text, char *icon_name)
 {
 
@@ -42,11 +26,14 @@ void mensagem (const char *text, const char *secondary_text, char *icon_name)
     g_object_set (mensagem_dialogo, "secondary_text", secondary_text, NULL);
     g_object_set (mensagem_dialogo, "icon_name", icon_name, NULL);
 
+
+    gtk_window_set_transient_for(GTK_WINDOW(mensagem_dialogo), GTK_WINDOW(window));
     gtk_widget_show_all (GTK_WIDGET (mensagem_dialogo));
     gtk_dialog_run      (GTK_DIALOG (mensagem_dialogo));
     gtk_widget_hide     (GTK_WIDGET (mensagem_dialogo));
 
 }
+
 
 void Login (const char *email, const char *senha, bool lembrar)
 {
@@ -69,6 +56,7 @@ void Login (const char *email, const char *senha, bool lembrar)
 }
 
 
+
 void on_button_login_clicked (GtkWidget *widget, gpointer data)
 {
     GtkEntry *entryEmail = GTK_ENTRY (gtk_builder_get_object(builder, "email"));
@@ -84,12 +72,37 @@ void on_button_login_clicked (GtkWidget *widget, gpointer data)
 }
 
 
+void on_button_modificar_inicial_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack, "view_modificar");
+
+}
+
+
+void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack, "view_listar");
+
+}
+
+
 void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 {
 
     gtk_stack_set_visible_child_name (stack, "view_login");
 
 }
+
+
+void on_button_cadastrar_login_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack,"view_cadastro");
+
+}
+
 
 int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
     for (int i = 0; i < argc; i++){
@@ -101,6 +114,7 @@ int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
     printf("\n");
     return 0;
 }
+
 
 int obter_proximo_id(sqlite3 *db)
 {
@@ -124,6 +138,7 @@ int obter_proximo_id(sqlite3 *db)
     sqlite3_finalize(stmt);
     return proximo_id;
 }
+
 
 void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
@@ -192,6 +207,30 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 void on_button_cad_voltar_clicked (GtkWidget *widget, gpointer data)
 {
 
+    gtk_stack_set_visible_child_name (stack, "view_modificar");
+
+}
+
+
+void on_button_voltar_login_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack, "view_inicial");
+
+}
+
+
+void on_button_atualizar_login_clicked (GtkWidget *widget, gpointer data)
+{
+
+    gtk_stack_set_visible_child_name (stack, "view_inicial");
+
+}
+
+
+void on_button_apagar_login_clicked (GtkWidget *widget, gpointer data)
+{
+
     gtk_stack_set_visible_child_name (stack, "view_inicial");
 
 }
@@ -239,6 +278,7 @@ void on_button_listar_clicked (GtkWidget *widget, gpointer data)
     }
 }
 
+
 void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
 {
 
@@ -278,13 +318,17 @@ int main (int argc, char *argv[])
         builder,
         "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
         "on_main_window_destroy",                   G_CALLBACK (on_main_window_destroy),
-        "on_button_cadastrar_inicial_clicked",      G_CALLBACK (on_button_cadastrar_inicial_clicked),
+        "on_button_modificar_inicial_clicked",      G_CALLBACK (on_button_modificar_inicial_clicked),
         "on_button_listar_inicial_clicked",         G_CALLBACK (on_button_listar_inicial_clicked),
         "on_button_sair_inicial_clicked",           G_CALLBACK (on_button_sair_inicial_clicked),
         "on_button_cadastrar_clicked",              G_CALLBACK (on_button_cadastrar_clicked),
         "on_button_cad_voltar_clicked",             G_CALLBACK (on_button_cad_voltar_clicked),
         "on_button_listar_clicked",                 G_CALLBACK (on_button_listar_clicked),
-        "on_button_listar_voltar_clicked",           G_CALLBACK (on_button_listar_voltar_clicked),
+        "on_button_listar_voltar_clicked",          G_CALLBACK (on_button_listar_voltar_clicked),
+        "on_button_voltar_login_clicked",          G_CALLBACK (on_button_voltar_login_clicked),
+        "on_button_apagar_login_clicked",          G_CALLBACK (on_button_apagar_login_clicked),
+        "on_button_atualizar_login_clicked",          G_CALLBACK (on_button_atualizar_login_clicked),
+        "on_button_cadastrar_login_clicked",          G_CALLBACK (on_button_cadastrar_login_clicked),
         NULL);
 
     gtk_builder_connect_signals (builder, NULL);

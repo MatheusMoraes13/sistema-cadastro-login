@@ -16,14 +16,13 @@
 					<Add directory="/usr/include/gtk-3.0" />
 					<Add directory="/usr/include/cairo" />
 					<Add directory="/usr/include/pango-1.0" />
-					<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll" />
-					<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03" />
 				</Compiler>
 				<Linker>
 					<Add library="gtk-3" />
 					<Add library="cairo" />
 					<Add library="pango-1.0" />
 					<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03/sqlite3.lib" />
+					<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -44,13 +43,23 @@
 		</Compiler>
 		<Linker>
 			<Add option="C:\Users\mathe\Desktop\Repositórios\SistemaCadastroLogin\src\dll" />
-			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite3.lib" />
+			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03/sqlite3.lib" />
 			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll" />
 		</Linker>
 		<Unit filename="SistemaLogin.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="UI.glade" />
+		<Unit filename="dll/libcairo-2.dll" />
+		<Unit filename="dll/libffi-8.dll" />
+		<Unit filename="dll/libgdk-3-0.dll" />
+		<Unit filename="dll/libgio-2.0-0.dll" />
+		<Unit filename="dll/libglib-2.0-0.dll" />
+		<Unit filename="dll/libgobject-2.0-0.dll" />
+		<Unit filename="dll/libgtk-3-0.dll" />
+		<Unit filename="dll/libintl-8.dll" />
+		<Unit filename="dll/libpango-1.0-0.dll" />
+		<Unit filename="dll/libpcre2-8-0.dll" />
 		<Unit filename="sqlite_03/sqlite3.c">
 			<Option compilerVar="CC" />
 		</Unit>
