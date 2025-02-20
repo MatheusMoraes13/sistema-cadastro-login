@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/SistemaLogin" prefix_auto="1" extension_auto="1" />
+				<Option output="SistemaLogin" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -42,9 +42,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
-			<Add option="C:\Users\mathe\Desktop\Repositórios\SistemaCadastroLogin\src\dll" />
+			<Add option="-lgtk-3 -lgdk-3 -lcairo -lpango-1.0 -lglib-2.0 -lintl -lsqlite3" />
 			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03/sqlite3.lib" />
-			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll" />
+			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll&#x0A;" />
+			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03" />
 		</Linker>
 		<Unit filename="SistemaLogin.c">
 			<Option compilerVar="CC" />

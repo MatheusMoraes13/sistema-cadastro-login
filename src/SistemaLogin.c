@@ -43,7 +43,7 @@ void Login (const char *email, const char *senha, bool lembrar)
 
         mensagem ("Bem Vindo", "Usuario logado com sucesso!", "dialog-ok");
         gtk_stack_set_visible_child_name (stack, "view_inicial");
-        g_object_set (window, "icon_name", "avatar-default", NULL);
+        g_object_set (window, "icon_name", "avatar-default-symbolic", NULL);
 
     }
 
@@ -91,6 +91,7 @@ void on_button_listar_inicial_clicked (GtkWidget *widget, gpointer data)
 void on_button_sair_inicial_clicked (GtkWidget *widget, gpointer data)
 {
 
+    g_object_set (window, "icon_name", "changes-prevent", NULL);
     gtk_stack_set_visible_child_name (stack, "view_login");
 
 }
