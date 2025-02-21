@@ -35,7 +35,7 @@ void mensagem (const char *text, const char *secondary_text, char *icon_name)
 }
 
 
-void Login (const char *email, const char *senha, bool lembrar)
+void Login (const char *email, const char *senha)
 {
 
     if ((strcmp (email, "admin") == 0) && (strcmp (senha, "admin") == 0))
@@ -65,9 +65,8 @@ void on_button_login_clicked (GtkWidget *widget, gpointer data)
 
     const gchar *email = gtk_entry_get_text (entryEmail);
     const gchar *senha = gtk_entry_get_text (entrySenha);
-    bool lembrar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkLembrar));
 
-    Login (email, senha, lembrar);
+    Login (email, senha);
 
 }
 
@@ -224,7 +223,7 @@ void on_button_voltar_login_clicked (GtkWidget *widget, gpointer data)
 void on_button_atualizar_login_clicked (GtkWidget *widget, gpointer data)
 {
 
-    gtk_stack_set_visible_child_name (stack, "view_inicial");
+    gtk_stack_set_visible_child_name (stack, "view_atualizar");
 
 }
 
@@ -234,6 +233,18 @@ void on_button_apagar_login_clicked (GtkWidget *widget, gpointer data)
 
     gtk_stack_set_visible_child_name (stack, "view_inicial");
 
+}
+
+
+void on_button_atualizar_atualizar_clicked (GtkWidget *widget, gpointer data)
+{
+    gtk_stack_set_visible_child_name (stack, "view_modificar");
+}
+
+
+void on_button_voltar_atualizar_clicked (GtkWidget *widget, gpointer data)
+{
+    gtk_stack_set_visible_child_name (stack, "view_modificar");
 }
 
 
@@ -317,19 +328,23 @@ int main (int argc, char *argv[])
 
     gtk_builder_add_callback_symbols(
         builder,
-        "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
-        "on_main_window_destroy",                   G_CALLBACK (on_main_window_destroy),
-        "on_button_modificar_inicial_clicked",      G_CALLBACK (on_button_modificar_inicial_clicked),
-        "on_button_listar_inicial_clicked",         G_CALLBACK (on_button_listar_inicial_clicked),
-        "on_button_sair_inicial_clicked",           G_CALLBACK (on_button_sair_inicial_clicked),
-        "on_button_cadastrar_clicked",              G_CALLBACK (on_button_cadastrar_clicked),
-        "on_button_cad_voltar_clicked",             G_CALLBACK (on_button_cad_voltar_clicked),
-        "on_button_listar_clicked",                 G_CALLBACK (on_button_listar_clicked),
-        "on_button_listar_voltar_clicked",          G_CALLBACK (on_button_listar_voltar_clicked),
-        "on_button_voltar_login_clicked",          G_CALLBACK (on_button_voltar_login_clicked),
-        "on_button_apagar_login_clicked",          G_CALLBACK (on_button_apagar_login_clicked),
-        "on_button_atualizar_login_clicked",          G_CALLBACK (on_button_atualizar_login_clicked),
-        "on_button_cadastrar_login_clicked",          G_CALLBACK (on_button_cadastrar_login_clicked),
+        "on_button_login_clicked",                        G_CALLBACK (on_button_login_clicked),
+        "on_main_window_destroy",                         G_CALLBACK (on_main_window_destroy),
+        "on_button_modificar_inicial_clicked",            G_CALLBACK (on_button_modificar_inicial_clicked),
+        "on_button_listar_inicial_clicked",               G_CALLBACK (on_button_listar_inicial_clicked),
+        "on_button_sair_inicial_clicked",                 G_CALLBACK (on_button_sair_inicial_clicked),
+        "on_button_cadastrar_clicked",                    G_CALLBACK (on_button_cadastrar_clicked),
+        "on_button_cad_voltar_clicked",                   G_CALLBACK (on_button_cad_voltar_clicked),
+        "on_button_listar_clicked",                       G_CALLBACK (on_button_listar_clicked),
+        "on_button_listar_voltar_clicked",                G_CALLBACK (on_button_listar_voltar_clicked),
+        "on_button_voltar_login_clicked",                 G_CALLBACK (on_button_voltar_login_clicked),
+        "on_button_apagar_login_clicked",                 G_CALLBACK (on_button_apagar_login_clicked),
+        "on_button_atualizar_login_clicked",              G_CALLBACK (on_button_atualizar_login_clicked),
+        "on_button_cadastrar_login_clicked",              G_CALLBACK (on_button_cadastrar_login_clicked),
+        "on_button_atualizar_login_clicked",              G_CALLBACK (on_button_atualizar_login_clicked),
+        "on_button_apagar_login_clicked",                 G_CALLBACK (on_button_apagar_login_clicked),
+        "on_button_atualizar_atualizar_clicked",          G_CALLBACK (on_button_atualizar_atualizar_clicked),
+        "on_button_voltar_atualizar_clicked",          G_CALLBACK (on_button_voltar_atualizar_clicked),
         NULL);
 
     gtk_builder_connect_signals (builder, NULL);
