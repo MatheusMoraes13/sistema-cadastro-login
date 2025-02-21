@@ -41,7 +41,7 @@ void Login (const char *email, const char *senha)
     if ((strcmp (email, "admin") == 0) && (strcmp (senha, "admin") == 0))
     {
 
-        mensagem ("Bem Vindo", "Usuario logado com sucesso!", "dialog-ok");
+        mensagem ("Bem Vindo", "Usuario logado com sucesso!", "emblem-default");
         gtk_stack_set_visible_child_name (stack, "view_inicial");
         g_object_set (window, "icon_name", "avatar-default-symbolic", NULL);
 
@@ -61,7 +61,6 @@ void on_button_login_clicked (GtkWidget *widget, gpointer data)
 {
     GtkEntry *entryEmail = GTK_ENTRY (gtk_builder_get_object(builder, "email"));
     GtkEntry *entrySenha = GTK_ENTRY (gtk_builder_get_object(builder, "senha"));
-    GtkCheckButton *checkLembrar = GTK_CHECK_BUTTON (gtk_builder_get_object (builder, "lembrar"));
 
     const gchar *email = gtk_entry_get_text (entryEmail);
     const gchar *senha = gtk_entry_get_text (entrySenha);
@@ -197,7 +196,7 @@ void on_button_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
         char texto[128];
         g_snprintf(texto, 128, "%s%s%s", "Usuario ", cad_nome, " cadastrado!");
-        mensagem ("Aviso", texto, "dialog_mensage_default");
+        mensagem ("Aviso", texto, "emblem-default");
 
     }
 
