@@ -40,9 +40,10 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-mwindows" />
 		</Compiler>
 		<Linker>
-			<Add option="-lgtk-3 -lgdk-3 -lcairo -lpango-1.0 -lglib-2.0 -lintl -lsqlite3" />
+			<Add option="-lgtk-3 -lgdk-3 -lcairo -lpango-1.0 -lglib-2.0 -lintl -lsqlite3 -mwindows" />
 			<Add library="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03/sqlite3.lib" />
 			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/dll&#x0A;" />
 			<Add directory="C:/Users/mathe/Desktop/Repositórios/SistemaCadastroLogin/src/sqlite_03" />

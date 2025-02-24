@@ -328,15 +328,107 @@ void on_button_atualizar_atualizar_clicked (GtkWidget *widget, gpointer data)
 void on_button_pesquisar_apagar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    gtk_stack_set_visible_child_name (stack, "view_modificar");
+    sqlite3 * db = 0;
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_open("Logins.db3", &db);
+
+    GtkEntry *entry_pesquisar_apagar = GTK_ENTRY (gtk_builder_get_object(builder, "pesquisar_apagar"));
+    const char *pesquisar_apagar = gtk_entry_get_text(entry_pesquisar_apagar);
+
+    char *output;
+    long modify = strtol (pesquisar_apagar, &output, 10);
+    int id = modify;
+
+    char *mensagem_erro = NULL;
+
+        if (rc != SQLITE_OK)
+        {
+
+            mensagem("Erro", mensagem_erro, "icons/warning-100x100.png");
+            sqlite3_free (mensagem_erro);
+            return;
+
+        }
+
+    char *query = "SELECT nome, email, senha FROM logins WHERE id = ?";
+
+    rc = sqlite3_prepare_v2 (db, query, -1, &stmt, NULL);
+    sqlite3_bind_int (stmt, 1, id);
+
+    GtkEntry *entry_nome_apagar =  GTK_ENTRY (gtk_builder_get_object(builder, "nome_apagar"));
+    GtkEntry *entry_email_apagar = GTK_ENTRY (gtk_builder_get_object(builder, "email_apagar"));
+    GtkEntry *entry_senha_apagar = GTK_ENTRY (gtk_builder_get_object(builder, "senha_apagar"));
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+        const char *nome  = (const char *)sqlite3_column_text(stmt, 0);
+        const char *email = (const char *)sqlite3_column_text(stmt, 1);
+        const char *senha = (const char *)sqlite3_column_text(stmt, 2);
+
+        gtk_entry_set_text (entry_nome_apagar,  nome);
+        gtk_entry_set_text (entry_email_apagar, email);
+        gtk_entry_set_text (entry_senha_apagar, senha);
+        }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
 
 }
 
 
 void on_button_apagar_apagar_clicked (GtkWidget *widget, gpointer data)
 {
+    sqlite3 * db = 0;
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_open("Logins.db3", &db);
+    const char *query = "DELETE FROM logins WHERE id = ?";
 
-    gtk_stack_set_visible_child_name (stack, "view_modificar");
+
+    GtkEntry *entry_pesquisar_apagar = GTK_ENTRY (gtk_builder_get_object(builder, "pesquisar_apagar"));
+    const char *pesquisar_apagar = gtk_entry_get_text(entry_pesquisar_apagar);
+    char *output;
+    long modify = strtol (pesquisar_apagar, &output, 10);
+    int id = modify;
+
+    GtkCheckButton *check_confirmar = GTK_CHECK_BUTTON (gtk_builder_get_object(builder, "confirmar_apagar"));
+    GtkEntry *entry_nome_apagar = GTK_ENTRY (gtk_builder_get_object(builder, "nome_apagar"));
+
+    const char *nome_apagar = gtk_entry_get_text (entry_nome_apagar);
+    bool confirmar = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(check_confirmar));
+
+    if (confirmar == 1)
+    {
+        rc = sqlite3_prepare_v2(db, query, -1, &stmt, NULL);
+        if (rc != SQLITE_OK)
+        {
+            mensagem("Erro", "Erro ao preparar a consulta SQL.", "icons/warning-100x100.png");
+            return;
+        }
+
+        sqlite3_bind_int(stmt, 1, id);
+
+        rc = sqlite3_step (stmt);
+
+        char texto[128];
+        if (rc == SQLITE_DONE)
+        {
+            g_snprintf(texto, 128, "%s%s%s", "Usuario ", nome_apagar, " apagado!");
+            mensagem ("Aviso", texto, "icons/check_circle-100x100.png");
+        }
+
+        else
+        {
+            mensagem("Erro", "Falha ao apagar o usuário!", "icons/warning-100x100.png");
+        }
+
+        sqlite3_finalize (stmt);
+    }
+
+    if (confirmar == 0)
+    {
+       mensagem ("Aviso", "É preciso confirmar que deseja apagar", "icons/warning-100x100.png");
+    }
+
+    sqlite3_close (db);
 
 }
 
@@ -397,7 +489,7 @@ void on_button_listar_clicked (GtkWidget *widget, gpointer data)
 
 void on_button_listar_voltar_clicked (GtkWidget *widget, gpointer data)
 {
-
+    gtk_list_store_clear (modelo_armazenamento);
     gtk_stack_set_visible_child_name (stack, "view_inicial");
 
 }

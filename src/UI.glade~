@@ -656,7 +656,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="emali_atualizar">
+                  <object class="GtkEntry" id="email_atualizar">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                   </object>
@@ -788,7 +788,9 @@
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="halign">center</property>
                 <property name="margin-bottom">5</property>
+                <property name="column-spacing">5</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -896,21 +898,19 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="senha_apagar">
+                  <object class="GtkEntry" id="nome_apagar">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Senha do login</property>
+                    <property name="can-focus">True</property>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
-                    <property name="top-attach">2</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="email_apagar">
+                  <object class="GtkEntry" id="email_apagar">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Email do login</property>
+                    <property name="can-focus">True</property>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
@@ -918,14 +918,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="nome_apagar">
+                  <object class="GtkEntry" id="senha_apagar">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Nome do login</property>
+                    <property name="can-focus">True</property>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
-                    <property name="top-attach">0</property>
+                    <property name="top-attach">2</property>
                   </packing>
                 </child>
               </object>
@@ -936,7 +935,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="check_confirmar_apagar">
+              <object class="GtkCheckButton" id="confirmar_apagar">
                 <property name="label" translatable="yes">Confirmar</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
