@@ -1,0 +1,12 @@
+*.exe
+*.db3
+*.cbp
+*.depend
+*.layout
+*.o
+*.glade~
+
+/dll/
+/icons/
+/obj/
+/sqlite_03/
