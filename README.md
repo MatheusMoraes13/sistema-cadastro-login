@@ -22,35 +22,19 @@ Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a b
 ├── src
 │   ├── main.c
 │   ├── interface.c
-│   ├── database.c
-│   ├── auth.c
-├── ui
+│   ├── database.db3
 │   ├── UI.glade
-├── build
+|   ├── icons/
+|   |   ├── imagens utilizadas
+├── lib
+|  ├── gdk-pixbuf-2.0
+├── share
 ├── README.md
 ```
 
 ## Requisitos
-- GTK3 instalado (`libgtk-3-dev` para Linux).
-- Glade para edição da UI.
-- Compilador C (gcc ou outro compatível).
-
-## Como Compilar e Executar
-### Instalação das dependências (Linux)
-```sh
-sudo apt update
-sudo apt install libgtk-3-dev glade
-```
-
-### Compilação do projeto
-```sh
-gcc src/main.c src/interface.c src/database.c src/auth.c -o cadastro_login `pkg-config --cflags --libs gtk+-3.0`
-```
-
-### Execução
-```sh
-./cadastro_login
-```
+- O programa pode ser executado em qualquer máquina.
+   - É necessario que o usuário tenha as DLLs devidamente adicionadas em seu diretório
 
 
 ## Licença
