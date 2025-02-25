@@ -524,8 +524,8 @@ int main (int argc, char *argv[])
 
     gtk_builder_add_callback_symbols(
         builder,
-        "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
         "on_main_window_destroy",                   G_CALLBACK (on_main_window_destroy),
+        "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
         "on_button_modificar_inicial_clicked",      G_CALLBACK (on_button_modificar_inicial_clicked),
         "on_button_listar_inicial_clicked",         G_CALLBACK (on_button_listar_inicial_clicked),
         "on_button_sair_inicial_clicked",           G_CALLBACK (on_button_sair_inicial_clicked),
