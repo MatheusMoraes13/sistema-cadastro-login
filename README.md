@@ -11,9 +11,8 @@ Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a b
 
 ## Funcionalidades
 - Cadastro de novos logins.
-- Atualização de um login já cadastrado
-- Apagar um login cadastrado anteriormente
-- Login de usuários cadastrados.
+- Atualização de um login já cadastrado.
+- Apagar um login cadastrado anteriormente.
 - Interface gráfica amigável.
 - Armazenamento  nome/email/senha.
 
