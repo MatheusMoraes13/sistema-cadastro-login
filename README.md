@@ -10,11 +10,12 @@ Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a b
 - **SQLlite3**: Ferramenta de banco de dados utilizada para armazenamento das informações dos logins.
 
 ## Funcionalidades
-- Cadastro de novos usuários.
+- Cadastro de novos logins.
+- Atualização de um login já cadastrado
+- Apagar um login cadastrado anteriormente
 - Login de usuários cadastrados.
-- Validação de credenciais.
 - Interface gráfica amigável.
-- Armazenamento  senhas.
+- Armazenamento  nome/email/senha.
 
 ## Estrutura do Projeto
 ```
