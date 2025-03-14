@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <sqlite3.h>
+
+int main() {
+    sqlite3 *db1, *db2;
+    char *err_msg = NULL;
+
+    // Abrindo os dois bancos de dados
+    if (sqlite3_open("banco1.db", &db1)) {
+        printf("Erro ao abrir banco1: %s\n", sqlite3_errmsg(db1));
+        return 1;
+    }
+
+    if (sqlite3_open("banco2.db", &db2)) {
+        printf("Erro ao abrir banco2: %s\n", sqlite3_errmsg(db2));
+        sqlite3_close(db1);
+        return 1;
+    }
+
+    // Criando uma tabela em cada banco
+    const char *sql_create = "CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY, nome TEXT);";
+
+    if (sqlite3_exec(db1, sql_create, 0, 0, &err_msg) != SQLITE_OK) {
+        printf("Erro no banco1: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+
+    if (sqlite3_exec(db2, sql_create, 0, 0, &err_msg) != SQLITE_OK) {
+        printf("Erro no banco2: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+
+    // Inserindo dados no primeiro banco
+    const char *sql_insert1 = "INSERT INTO usuarios (nome) VALUES ('Alice');";
+    if (sqlite3_exec(db1, sql_insert1, 0, 0, &err_msg) != SQLITE_OK) {
+        printf("Erro ao inserir no banco1: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+
+    // Inserindo dados no segundo banco
+    const char *sql_insert2 = "INSERT INTO usuarios (nome) VALUES ('Bob');";
+    if (sqlite3_exec(db2, sql_insert2, 0, 0, &err_msg) != SQLITE_OK) {
+        printf("Erro ao inserir no banco2: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+
+    // Fechando os bancos
+    sqlite3_close(db1);
+    sqlite3_close(db2);
+
+    printf("Operações concluídas com sucesso!\n");
+    return 0;
+}

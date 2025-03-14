@@ -79,9 +79,9 @@ void on_button_novo_login_clicked (GtkWidget *widget, gpointer data)
 void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
 
-    sqlite3 * db = 0;
+    sqlite3 * db2 = 0;
     sqlite3_stmt *stmt;
-    int rc = sqlite3_open("Usuarios.db3", &db);
+    int rc = sqlite3_open("Usuarios.db3", &db2);
 
     GtkEntry *entry_nome  = GTK_ENTRY (gtk_builder_get_object(builder, "novo_nome"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "novo_email"));
@@ -94,17 +94,17 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
     if (strcmp (novo_nome, "") == 0 || strcmp (novo_email, "") == 0 || strcmp (novo_senha, "") == 0)
     {
         mensagem("Aviso", "Campo obrigatório em branco!", "icons/warning-100x100.png");
-        sqlite3_close(db);
+        sqlite3_close(db2);
         return;
     }
 
 
     const char *query = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?);";
 
-    rc = sqlite3_prepare_v2(db, query, -1, &stmt, NULL);
+    rc = sqlite3_prepare_v2(db2, query, -1, &stmt, NULL);
     if (rc != SQLITE_OK) {
         mensagem("Erro", "Erro ao preparar a consulta SQL.", "icons/warning-100x100.png");
-        sqlite3_close(db);
+        sqlite3_close(db2);
         return;
     }
 
@@ -114,7 +114,7 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
 
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
+    sqlite3_close(db2);
 
     if (rc == SQLITE_DONE) {
         mensagem("Sucesso", "Usuário cadastrado com sucesso!", "icons/check_circle-100x100.png");
@@ -564,10 +564,10 @@ int main (int argc, char *argv[])
 {
 
     char *mensagem_erro = NULL;
-    sqlite3 * db = 0;
+    sqlite3 *db, *db2;
 
     int rc = sqlite3_open("Logins.db3", &db);
-    int rc2 = sqlite3_open("Usuarios.db3", &db);
+    int rc2 = sqlite3_open("Usuarios.db3", &db2);
 
     if (rc != SQLITE_OK){
         mensagem("Erro", "Falha ao abrir o banco de dados!", "icons/warning-100x100.png");
@@ -575,20 +575,26 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-    char create[] = "CREATE TABLE logins( "
+    if (rc2 != SQLITE_OK){
+        mensagem("Erro", "Falha ao abrir o banco de dados!", "icons/warning-100x100.png");
+        sqlite3_close(db2);
+        return 1;
+    }
+
+    char create[] = "CREATE TABLE IF NOT EXISTS logins( "
                     "id INTEGER PRIMARY KEY,"
                     "nome TEXT,"
                     "email TEXT,"
                     "senha TEXT)";
 
-    char create2[] = "CREATE TABLE usuarios( "
+    char create2[] = "CREATE TABLE IF NOT EXISTS usuarios( "
                     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     "nome TEXT,"
                     "email TEXT,"
                     "senha TEXT)";
 
     rc = sqlite3_exec(db, create, sqlite_retorno, 0, &mensagem_erro);
-    rc2 = sqlite3_exec(db, create2, sqlite_retorno, 0, &mensagem_erro);
+    rc2 = sqlite3_exec(db2, create2, sqlite_retorno, 0, &mensagem_erro);
 
 
     gtk_init ( &argc, &argv);
@@ -632,5 +638,6 @@ int main (int argc, char *argv[])
     gtk_widget_show_all (window);
     gtk_main ();
     sqlite3_close(db);
+    sqlite3_close(db2);
     return 0;
 }
