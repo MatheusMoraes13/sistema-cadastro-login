@@ -12,10 +12,48 @@ GtkListStore *modelo_armazenamento;
 
 int id = 0;
 
+
+int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
+    for (int i = 0; i < argc; i++){
+
+        printf("%s = %s\n", coluna [i], argv[i] ? argv[i]: "NULL");
+
+    }
+
+    printf("\n");
+    return 0;
+}
+
+
+int obter_proximo_id(sqlite3 *db)
+{
+    sqlite3_stmt *stmt;
+    int proximo_id = 1;
+
+    const char *query = "SELECT MAX(id) FROM logins;";
+
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) == SQLITE_OK)
+    {
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            int max_id = sqlite3_column_int(stmt, 0);
+            if (max_id > 0)
+            {
+                proximo_id = max_id + 1;
+            }
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    return proximo_id;
+}
+
+
 void on_main_window_destroy (GtkWidget *widget, gpointer data)
 {
     gtk_main_quit();
 }
+
 
 void mensagem (const char *text, const char *secondary_text, char *icon_name)
 {
@@ -54,7 +92,6 @@ void Login (const char *email, const char *senha)
 }
 
 
-
 void on_button_login_clicked (GtkWidget *widget, gpointer data)
 {
     GtkEntry *entryEmail = GTK_ENTRY (gtk_builder_get_object(builder, "email"));
@@ -83,9 +120,9 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
     sqlite3_stmt *stmt;
     int rc = sqlite3_open("Usuarios.db3", &db2);
 
-    GtkEntry *entry_nome  = GTK_ENTRY (gtk_builder_get_object(builder, "novo_nome"));
-    GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "novo_email"));
-    GtkEntry *entry_senha = GTK_ENTRY (gtk_builder_get_object(builder, "novo_senha"));
+    GtkEntry *entry_nome  = GTK_ENTRY (gtk_builder_get_object(builder, "nome_cadastrar"));
+    GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "email_cadastrar"));
+    GtkEntry *entry_senha = GTK_ENTRY (gtk_builder_get_object(builder, "senha_cadastrar"));
 
     const char *novo_nome  = gtk_entry_get_text(entry_nome);
     const char *novo_email = gtk_entry_get_text(entry_email);
@@ -98,8 +135,9 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
         return;
     }
 
+    int novo_id = obter_proximo_id(db2);
 
-    const char *query = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?);";
+    const char *query = "INSERT INTO usuarios (id, nome, email, senha) VALUES (?, ?, ?, ?);";
 
     rc = sqlite3_prepare_v2(db2, query, -1, &stmt, NULL);
     if (rc != SQLITE_OK) {
@@ -108,9 +146,11 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
         return;
     }
 
-    sqlite3_bind_text(stmt, 1, novo_nome,  -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, novo_email, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, novo_senha, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 1, novo_id);
+    sqlite3_bind_text(stmt, 2, novo_nome,  -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, novo_email, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, novo_senha, -1, SQLITE_STATIC);
+
 
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -121,7 +161,6 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
     } else {
         mensagem("Erro", "Falha ao cadastrar usuário!", "icons/warning-100x100.png");
     }
-
 }
 
 
@@ -162,42 +201,6 @@ void on_button_cadastrar_login_clicked (GtkWidget *widget, gpointer data)
 
     gtk_stack_set_visible_child_name (stack,"view_cadastro");
 
-}
-
-
-int sqlite_retorno (void *NotUsed, int argc, char **argv, char **coluna){
-    for (int i = 0; i < argc; i++){
-
-        printf("%s = %s\n", coluna [i], argv[i] ? argv[i]: "NULL");
-
-    }
-
-    printf("\n");
-    return 0;
-}
-
-
-int obter_proximo_id(sqlite3 *db)
-{
-    sqlite3_stmt *stmt;
-    int proximo_id = 1;
-
-    const char *query = "SELECT MAX(id) FROM logins;";
-
-    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) == SQLITE_OK)
-    {
-        if (sqlite3_step(stmt) == SQLITE_ROW)
-        {
-            int max_id = sqlite3_column_int(stmt, 0);
-            if (max_id > 0)
-            {
-                proximo_id = max_id + 1;
-            }
-        }
-    }
-
-    sqlite3_finalize(stmt);
-    return proximo_id;
 }
 
 
@@ -588,7 +591,7 @@ int main (int argc, char *argv[])
                     "senha TEXT)";
 
     char create2[] = "CREATE TABLE IF NOT EXISTS usuarios( "
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    "id INTEGER PRIMARY KEY,"
                     "nome TEXT,"
                     "email TEXT,"
                     "senha TEXT)";
@@ -605,6 +608,9 @@ int main (int argc, char *argv[])
         builder,
         "on_main_window_destroy",                   G_CALLBACK (on_main_window_destroy),
         "on_button_login_clicked",                  G_CALLBACK (on_button_login_clicked),
+        "on_button_novo_cadastrar_clicked",         G_CALLBACK (on_button_novo_cadastrar_clicked),
+        "on_button_novo_voltar_clicked",            G_CALLBACK (on_button_novo_voltar_clicked),
+        "on_button_novo_login_clicked",             G_CALLBACK (on_button_novo_login_clicked),
         "on_button_modificar_inicial_clicked",      G_CALLBACK (on_button_modificar_inicial_clicked),
         "on_button_listar_inicial_clicked",         G_CALLBACK (on_button_listar_inicial_clicked),
         "on_button_sair_inicial_clicked",           G_CALLBACK (on_button_sair_inicial_clicked),
@@ -624,9 +630,6 @@ int main (int argc, char *argv[])
         "on_button_pesquisar_apagar_clicked",       G_CALLBACK (on_button_pesquisar_apagar_clicked),
         "on_button_apagar_apagar_clicked",          G_CALLBACK (on_button_apagar_apagar_clicked),
         "on_button_voltar_apagar_clicked",          G_CALLBACK (on_button_voltar_apagar_clicked),
-        "on_button_novo_cadastrar_clicked",         G_CALLBACK (on_button_novo_cadastrar_clicked),
-        "on_button_novo_voltar_clicked",            G_CALLBACK (on_button_novo_voltar_clicked),
-        "on_button_novo_login_clicked",             G_CALLBACK (on_button_novo_login_clicked),
         NULL);
 
     gtk_builder_connect_signals (builder, NULL);
