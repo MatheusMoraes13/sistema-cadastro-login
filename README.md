@@ -2,6 +2,7 @@
 
 ## Descrição
 Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a biblioteca GTK3 para a interface gráfica e a ferramenta Glade para facilitar a construção da UI.
+   - Esse projeto será refatorado utilizando a linguágem JAVA para que possa ter funcionalidades mais avançadas e de melhor implementação.
 
 ## Tecnologias Utilizadas
 - **C**: Linguagem de programação principal.
