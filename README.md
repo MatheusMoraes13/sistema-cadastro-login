@@ -36,6 +36,9 @@ Este projeto é um sistema de cadastro e login desenvolvido em C, utilizando a b
 ## Requisitos
 - O programa pode ser executado em qualquer máquina.
    - É necessario que o usuário tenha as DLLs devidamente adicionadas em seu diretório
+ 
+## Considerações finais
+A aplicação será refatorada em JAVA para que tenha uma melhor implementação de suas funções, melhorias de segurança e mais.
 
 
 ## Licença
