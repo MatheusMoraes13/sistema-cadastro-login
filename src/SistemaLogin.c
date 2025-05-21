@@ -115,46 +115,60 @@ void on_button_novo_login_clicked (GtkWidget *widget, gpointer data)
 
 void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
 {
+    sqlite3 *db = NULL;
+    sqlite3_stmt *stmt = NULL;
+    int rc = sqlite3_open("Usuarios.db3", &db);
 
-    sqlite3 * db2 = 0;
-    sqlite3_stmt *stmt;
-    int rc = sqlite3_open("Usuarios.db3", &db2);
+    if (rc != SQLITE_OK || db == NULL) {
+        mensagem("Erro", "Falha ao abrir o banco de dados!", "icons/warning-100x100.png");
+        return;
+    }
+
+    if (!builder) {
+        mensagem("Erro", "Erro interno: GtkBuilder não foi inicializado!", "icons/warning-100x100.png");
+        sqlite3_close(db);
+        return;
+    }
 
     GtkEntry *entry_nome  = GTK_ENTRY (gtk_builder_get_object(builder, "nome_cadastrar"));
     GtkEntry *entry_email = GTK_ENTRY (gtk_builder_get_object(builder, "email_cadastrar"));
     GtkEntry *entry_senha = GTK_ENTRY (gtk_builder_get_object(builder, "senha_cadastrar"));
 
-    const char *novo_nome  = gtk_entry_get_text(entry_nome);
-    const char *novo_email = gtk_entry_get_text(entry_email);
-    const char *novo_senha = gtk_entry_get_text(entry_senha);
-
-    if (strcmp (novo_nome, "") == 0 || strcmp (novo_email, "") == 0 || strcmp (novo_senha, "") == 0)
-    {
-        mensagem("Aviso", "Campo obrigatório em branco!", "icons/warning-100x100.png");
-        sqlite3_close(db2);
+    if (!entry_nome || !entry_email || !entry_senha) {
+        mensagem("Erro", "Erro ao acessar os campos do formulário!", "icons/warning-100x100.png");
+        sqlite3_close(db);
         return;
     }
 
-    int novo_id = obter_proximo_id(db2);
+    const char *nome_cadastrar  = gtk_entry_get_text(entry_nome);
+    const char *email_cadastrar = gtk_entry_get_text(entry_email);
+    const char *senha_cadastrar = gtk_entry_get_text(entry_senha);
 
+    if (strcmp(nome_cadastrar, "") == 0 || strcmp(email_cadastrar, "") == 0 || strcmp(senha_cadastrar, "") == 0) {
+        mensagem("Aviso", "Campo obrigatório em branco!", "icons/warning-100x100.png");
+        sqlite3_close(db);
+        return;
+    }
+
+    int novo_id = obter_proximo_id(db);
     const char *query = "INSERT INTO usuarios (id, nome, email, senha) VALUES (?, ?, ?, ?);";
 
-    rc = sqlite3_prepare_v2(db2, query, -1, &stmt, NULL);
-    if (rc != SQLITE_OK) {
+    rc = sqlite3_prepare_v2(db, query, -1, &stmt, NULL);
+    if (rc != SQLITE_OK || stmt == NULL) {
+        g_print("Erro ao preparar a consulta SQL: %s\n", sqlite3_errmsg(db));
         mensagem("Erro", "Erro ao preparar a consulta SQL.", "icons/warning-100x100.png");
-        sqlite3_close(db2);
+        sqlite3_close(db);
         return;
     }
 
     sqlite3_bind_int(stmt, 1, novo_id);
-    sqlite3_bind_text(stmt, 2, novo_nome,  -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, novo_email, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, novo_senha, -1, SQLITE_STATIC);
-
+    sqlite3_bind_text(stmt, 2, nome_cadastrar,  -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, email_cadastrar, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, senha_cadastrar, -1, SQLITE_TRANSIENT);
 
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
-    sqlite3_close(db2);
+    sqlite3_close(db);
 
     if (rc == SQLITE_DONE) {
         mensagem("Sucesso", "Usuário cadastrado com sucesso!", "icons/check_circle-100x100.png");
@@ -162,6 +176,7 @@ void on_button_novo_cadastrar_clicked (GtkWidget *widget, gpointer data)
         mensagem("Erro", "Falha ao cadastrar usuário!", "icons/warning-100x100.png");
     }
 }
+
 
 
 void on_button_novo_voltar_clicked (GtkWidget *widget, gpointer data)
