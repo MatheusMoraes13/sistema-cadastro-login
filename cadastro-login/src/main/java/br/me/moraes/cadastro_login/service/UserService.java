@@ -3,17 +3,19 @@ package br.me.moraes.cadastro_login.service;
 import br.me.moraes.cadastro_login.model.User;
 import br.me.moraes.cadastro_login.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     UserRepository userRepository;
 
     public ResponseEntity<String> registerUser(@NotNull User user){
-        if (userRepository.getByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())){
             return ResponseEntity.badRequest().body("ERRO: Email já registrado");
         }
         else {
