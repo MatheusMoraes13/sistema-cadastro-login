@@ -15,9 +15,12 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     String id;
 
+    String service;
+    String site;
     String name;
     String username;
     String login;
     String password;
+
 
 }
