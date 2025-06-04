@@ -1,5 +1,5 @@
- $primary-color: #5c84fb;
-$secundary-color: #2a3c73;
+$primary-color: #6b9ac1;
+$secundary-color: #154269;
 $text-color: #555555;
 $gray-bg: #eeeeee;
 
@@ -22,6 +22,10 @@ $gray-bg: #eeeeee;
     .main-section{
         flex-grow: 1;
         background-color: $gray-bg;
+
+        h1{
+            color: $secundary-color;
+        }
     }
 
     .form-section{

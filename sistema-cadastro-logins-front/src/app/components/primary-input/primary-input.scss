@@ -1,0 +1,33 @@
+$gray-seconday-bg: #f1f3f6;
+$primary-color: #6b9ac1;
+$secundary-color: #154269;
+$text-color: #555555;
+$gray-bg: #eeeeee;
+
+.input-wrapper{
+    color: $text-color;
+    font-size: 16px;
+    text-align: start;
+
+    .input-content{
+        width: 100%;
+        display: flex;
+        
+
+        .icon{
+            padding: 12px;
+            border-radius: 8px;
+            background-color: $primary-color;
+        }
+
+        input{
+            border: none;
+            border-radius: 8px;
+            background-color: $gray-seconday-bg;
+            padding: 12px 0 12px 20px;
+            width: 100%;
+        }
+    }
+    
+}
+
