@@ -1,10 +1,31 @@
 <app-default-login-layout
     title="Entre em sua conta"
     primaryBtnText="Logue agora"
-    secondaryBtnText="Criar conta">
+    secondaryBtnText="Criar conta"
+    >
     
-    <form [formGroup]="loginForm">
-        <app-primary-input></app-primary-input>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+
+        <app-primary-input
+            formControlName="email"
+            inputName="email"
+            type="email"
+            label="Email"
+            placeholder="exemplo@gmail.com">
+
+            <img src="/public/assets/img/email-icon.png"/>
+        </app-primary-input>
+
+        <app-primary-input
+            formControlName="password"
+            inputName="password"
+            type="password"
+            label="Sua senha">
+
+            <img src="/public/assets/img/password-icon.png"/>
+        </app-primary-input>
+
+        <span>Esqueceu sua senha?</span>
     </form>
 
 </app-default-login-layout>

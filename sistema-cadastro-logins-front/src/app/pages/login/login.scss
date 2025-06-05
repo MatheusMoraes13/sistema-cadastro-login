@@ -1,3 +1,21 @@
+$gray-seconday-bg: #f1f3f6;
+$primary-color: #6b9ac1;
+$secundary-color: #154269;
+$text-color: #555555;
+$gray-bg: #eeeeee;
+
 form{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 34px;
+
+    span{
+        font-size: 14px;
+        text-decoration: underline;
+        color: $secundary-color;
+        text-align: end;
+
+    }
 }

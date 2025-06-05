@@ -4,7 +4,7 @@
         <h2>{{ title }}</h2>
         <ng-content></ng-content>
         <div class="btn-wrapper">
-            <button class="buttonPrimary">{{primaryBtnText}}</button>
+            <button class="buttonPrimary" (click)="submit()">{{primaryBtnText}}</button>
             <div class="divider">
                 <div></div>
                 <span>ou</span>
