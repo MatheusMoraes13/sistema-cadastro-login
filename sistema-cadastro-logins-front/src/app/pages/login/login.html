@@ -2,6 +2,8 @@
     title="Entre em sua conta"
     primaryBtnText="Logue agora"
     secondaryBtnText="Criar conta"
+    (submit)="submit()"
+    (navigate)="navigate()"
     >
     
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
@@ -13,7 +15,7 @@
             label="Email"
             placeholder="exemplo@gmail.com">
 
-            <img src="/public/assets/img/email-icon.png"/>
+            <img src="assets/svg/email-icon.svg"/>
         </app-primary-input>
 
         <app-primary-input
@@ -22,7 +24,7 @@
             type="password"
             label="Sua senha">
 
-            <img src="/public/assets/img/password-icon.png"/>
+            <img src="assets/svg/password-icon.svg"/>
         </app-primary-input>
 
         <span>Esqueceu sua senha?</span>
