@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/credential-service")
+@RequestMapping("credential-service")
 @AllArgsConstructor
 public class CredentialController {
 
